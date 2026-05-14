@@ -1,10 +1,5 @@
-from .db import SessionLocal
+from app.db import AsyncSessionLocal
 
-def get_db():
-    db = SessionLocal()
-
-    try:
-        yield db
-
-    finally:
-        db.close()
+async def get_db():
+    async with AsyncSessionLocal() as session:
+        yield session

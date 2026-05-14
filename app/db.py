@@ -1,23 +1,30 @@
 import os
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.orm import  declarative_base
 from dotenv import load_dotenv
+from sqlalchemy.ext.asyncio import (
+    create_async_engine,
+    AsyncSession,
+    async_sessionmaker,
+)
 
 load_dotenv()
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-engine = create_engine(DATABASE_URL)
+engine = create_async_engine(
+    DATABASE_URL,
+    echo=True,
+)
 
-SessionLocal = sessionmaker(
-    autocommit=False,
-    autoflush=False,
-    bind=engine
+AsyncSessionLocal = async_sessionmaker(
+    bind=engine,
+    class_=AsyncSession,
+    expire_on_commit=False,
 )
 
 Base = declarative_base()
 
 # alembic commands after each model changes
-# docker compose exec backend alembic revision --autogenerate -m "make status required"
+# docker compose exec backend alembic revision --autogenerate -m "message"
 # after this apply migrations
 # docker compose exec backend alembic upgrade head

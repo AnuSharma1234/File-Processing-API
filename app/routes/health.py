@@ -1,13 +1,13 @@
 from fastapi import APIRouter , Depends , status
 from fastapi.responses import JSONResponse
 from sqlalchemy import text
-from app.db import SessionLocal
+from app.db import AsyncSessionLocal
 
 healthRouter = APIRouter()
 
 @healthRouter.get('/health')
 def health_check():
-    db = SessionLocal()
+    db = AsyncSessionLocal()
 
     try:
         db.execute(text("SELECT 1"))
