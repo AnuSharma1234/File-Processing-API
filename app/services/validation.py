@@ -34,17 +34,20 @@ async def validate_file(file : UploadFile):
         )
     
     content = await file.read()
+    size = len(content)
 
-    if len(content)==0:
+    if size==0:
         raise HTTPException(
             status_code=400,
             detail="Empty file"
         )
     
-    if len(content) > MAX_FILE_SIZE:
+    if size > MAX_FILE_SIZE:
         raise HTTPException(
             status_code=400,
             detail="File too large"
         )
     
     await file.seek(0)
+
+    return size

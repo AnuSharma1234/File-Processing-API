@@ -1,5 +1,5 @@
 import os
-from sqlalchemy.orm import  declarative_base
+from sqlalchemy.orm import declarative_base
 from dotenv import load_dotenv
 from sqlalchemy.ext.asyncio import (
     create_async_engine,
@@ -22,7 +22,9 @@ AsyncSessionLocal = async_sessionmaker(
     expire_on_commit=False,
 )
 
-Base = declarative_base()
+# Declarative base is located in app.base to avoid creating engines when
+# importing models (helps Alembic autogenerate run without triggering async IO).
+from app.base import Base
 
 # alembic commands after each model changes
 # docker compose exec backend alembic revision --autogenerate -m "message"

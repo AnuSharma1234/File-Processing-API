@@ -1,9 +1,10 @@
-from fastapi import APIRouter, Depends , UploadFile
+from fastapi import APIRouter, Depends , UploadFile , File
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
 from app.dependencies import get_db
-from app.models import File
+
+from app.constants import FileStatus
 
 from app.services.validation import validate_file
 from app.services.storage import LocalStorageService
@@ -22,24 +23,24 @@ async def list_files(
 
     return files
 
+
 @fileRouter.post("/files")
 async def create_file(
-    file: UploadFile,
+    file: UploadFile = File(...),
     db=Depends(get_db)
 ):
-    await validate_file(file)
+    size = await validate_file(file)
 
-    storage=LocalStorageService()
-    
     db_file=await upload_file(
-        file,
-        db,
-        storage
+        file=file,
+        file_size=size,
+        db=db,
+        storage=LocalStorageService()
     )
 
     return {
         "job_id":str(
             db_file.id
         ),
-        "status":"pending"
+        "status":FileStatus.PENDING
     }

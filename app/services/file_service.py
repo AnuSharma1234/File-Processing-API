@@ -1,8 +1,10 @@
 from app.models import File
 from app.utils.filename import generate_storage_name
+from app.constants import FileStatus
 
 async def upload_file(
     file,
+    file_size,
     db,
     storage
 ):
@@ -17,10 +19,12 @@ async def upload_file(
     )
 
     db_file=File(
-        original_name=file.filename,
+        filename=file.filename,
         storage_name=storage_name,
-        file_path=path,
-        mime_type=file.content_type
+        storage_path=path,
+        file_type=file.content_type,
+        file_size=file_size,
+        status=FileStatus.PENDING
     )
 
     db.add(db_file)

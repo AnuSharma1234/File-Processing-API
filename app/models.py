@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String , Text , DateTime
 from sqlalchemy.sql import func
 from app.constants import FileStatus
 
-from .db import Base
+from .base import Base
 
 class File(Base):
     __tablename__ = "files"
@@ -14,6 +14,9 @@ class File(Base):
 
     # Stored file path in local storage/S3 later
     storage_path = Column(String, nullable=False)
+
+    # File storage name after conversion to uuid format
+    storage_name=Column(String,nullable=False,unique=True)
 
     # File type
     file_type = Column(String, nullable=False)
