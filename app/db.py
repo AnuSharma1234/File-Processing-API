@@ -28,3 +28,9 @@ Base = declarative_base()
 # docker compose exec backend alembic revision --autogenerate -m "message"
 # after this apply migrations
 # docker compose exec backend alembic upgrade head
+
+
+# command to get into postgres
+# docker exec -it postgres-db psql -U postgres
+# \c file_processing
+# \dt
